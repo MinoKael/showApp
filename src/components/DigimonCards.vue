@@ -1,46 +1,46 @@
 <script setup>
 import axios from 'axios';
-import { ref, watch, toRaw } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import Card from './Card.vue';
 
-const pokemon = ref([]);
-const page = ref(0);
+const digimon = ref([]);
+const page = ref(1);
 
-const response = await axios.get(
-  'https://pokeapi.co/api/v2/pokemon?limit=8&offset=0'
-);
+onMounted(async () => {
+  const response = await axios.get(
+    'https://www.digi-api.com/api/v1/digimon?pageSize=8'
+  );
+  fetchData(response.data.content, digimon.value);
+});
 
-// FETCH AND PUSH DATA TO POKEMON VARIABLE //
 const fetchData = (endpoints, storeData) => {
-  Promise.all(endpoints.map(endpoint => axios.get(endpoint.url))).then(data =>
+  Promise.all(endpoints.map(endpoint => axios.get(endpoint.href))).then(data =>
     storeData.push(...data)
   );
 };
-fetchData(response.data.results, pokemon.value);
-// ======= //
 
 // WATCH //
 watch(page, async () => {
   const res = await axios.get(
-    `https://pokeapi.co/api/v2/pokemon?limit=8&offset=${page.value * 8}`
+    `https://www.digi-api.com/api/v1/digimon?pageSize=8&page=${page.value}`
   );
-  pokemon.value = [];
-  fetchData(res.data.results, pokemon.value);
+  digimon.value = [];
+  fetchData(res.data.content, digimon.value);
 });
 // ======= //
 </script>
 <template>
   <div class="container">
     <div class="cards">
-      {{ pokemon.value }}
-      <Card
+      {{ digimon }}
+      <!--<Card
         v-for="pokemon in pokemon"
         :key="pokemon.data.order"
         :image="pokemon.data.sprites.other['official-artwork'].front_default"
         :name="pokemon.data.name"
         :types="pokemon.data.types"
         :id="pokemon.data.order"
-      />
+      /> -->
     </div>
     <div class="button-container">
       <button @click="if (page > 0) page--;">&lt</button>
@@ -53,6 +53,7 @@ watch(page, async () => {
 .container {
   background-color: rgb(27, 26, 26);
   padding: 30px;
+  margin-top: 100px;
 }
 .cards {
   max-width: 1000px;

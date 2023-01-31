@@ -1,5 +1,6 @@
 <script setup>
 import PokemonCards from './components/PokemonCards.vue';
+import DigimonCards from './components/DigimonCards.vue';
 </script>
 
 <template>
@@ -13,5 +14,6 @@ import PokemonCards from './components/PokemonCards.vue';
         </div>
       </template>
     </Suspense>
+    <DigimonCards />
   </main>
 </template>
