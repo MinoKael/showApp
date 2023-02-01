@@ -1,13 +1,5 @@
 <script setup>
-const { image, name, types, id } = defineProps([
-  'image',
-  'name',
-  'types',
-  'id'
-]);
-const capitalize = word => {
-  return word.charAt(0).toUpperCase() + word.slice(1);
-};
+const { image, name } = defineProps(['image', 'name']);
 </script>
 
 <template>
@@ -15,13 +7,8 @@ const capitalize = word => {
     <template #cover>
       <img :src="image" />
     </template>
-    <h3>{{ capitalize(name) }}</h3>
-    <div class="jobs">
-      <p v-for="(type, index) in types" :key="id + type.type.name">
-        {{ capitalize(type.type.name)
-        }}<span v-if="index < types.length - 1">,&nbsp</span>
-      </p>
-    </div>
+    <h3>{{ name }}</h3>
+    <slot></slot>
   </NCard>
 </template>
 <style scoped>
@@ -31,14 +18,5 @@ const capitalize = word => {
 }
 .n-card img {
   height: 250px;
-}
-
-p {
-  font-size: 10px;
-}
-
-.jobs {
-  display: flex;
-  flex-wrap: wrap;
 }
 </style>

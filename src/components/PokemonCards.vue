@@ -27,6 +27,9 @@ watch(page, async () => {
   pokemon.value = [];
   fetchData(res.data.results, pokemon.value);
 });
+const capitalize = word => {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};
 // ======= //
 </script>
 <template>
@@ -37,10 +40,20 @@ watch(page, async () => {
         v-for="pokemon in pokemon"
         :key="pokemon.data.order"
         :image="pokemon.data.sprites.other['official-artwork'].front_default"
-        :name="pokemon.data.name"
-        :types="pokemon.data.types"
-        :id="pokemon.data.order"
-      />
+        :name="capitalize(pokemon.data.name)"
+      >
+        <slot
+          ><div class="jobs">
+            <p
+              v-for="(type, index) in pokemon.data.types"
+              :key="pokemon.data.order + type.type.name"
+            >
+              {{ capitalize(type.type.name)
+              }}<span v-if="index < pokemon.data.types.length - 1">,&nbsp</span>
+            </p>
+          </div></slot
+        >
+      </Card>
     </div>
     <div class="button-container">
       <button @click="if (page > 0) page--;">&lt</button>
@@ -67,10 +80,7 @@ watch(page, async () => {
 .cards p {
   font-size: 10px;
 }
-.jobs {
-  display: flex;
-  flex-wrap: wrap;
-}
+
 .button-container {
   display: flex;
   justify-content: center;
@@ -88,5 +98,13 @@ watch(page, async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+p {
+  font-size: 10px;
+}
+
+.jobs {
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>
